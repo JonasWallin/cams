@@ -45,9 +45,13 @@ growthObjInit <- function(data, growthIndex, growthIndexPrev, exitIndex = NULL){
 #'                $Above     - formula for number of increased
 #'                $Below     - formula for number of deacreased
 #' dist         - 2x1 distributrion for decline and growth deafult: geommc, geomm
+#' difference   - analys difference between previous or raw value
+#'                i.e. difference = true    employee - previous employee
+#'                     difference = false   sales
 growthEstimate <- function(growthObj,
                            formula = NULL,
-                           dist = list(Above = "geomm", Below = "geommc")
+                           dist = list(Above = "geomm", Below = "geommc"),
+                           difference =TRUE
                            ){
 
   #add if missing Above, Below, ProbEqual ProbAbove
@@ -96,11 +100,24 @@ growthEstimate <- function(growthObj,
                                        family = binomial)
   }
 
-  y <- growth - growth_lag
-  indexAbove <- y >  0
-  indexProbAbove <- (y > 0) & (growth_lag > 1)
-  indexEqual <- y == 0
-  indexBelow <- y <  0
+  #are we
+  if(difference){
+    y <- growth - growth_lag
+    indexAbove <- y >  0
+    indexProbAbove <- (y > 0) & (growth_lag > 0)
+    indexEqual <- y == 0
+    indexBelow <- y <  0  & growth_lag > 1
+    dataAbove    <- data[indexEqual == FALSE & growth_lag > 0,]
+    dataAbove$y <- y[indexEqual == FALSE & growth_lag > 0] > 0
+  }else{
+    y <- growth
+    indexAbove <- y >  growth_lag
+    indexProbAbove <- (y > growth_lag) & (growth_lag > 0) & y != 0
+    indexEqual <- y == 0
+    indexBelow <- y <  growth_lag & y != 0  & growth_lag > 0
+    dataAbove    <- data[indexEqual == FALSE & growth_lag > 0,]
+    dataAbove$y <- y[indexEqual == FALSE & growth_lag > 0] > growth_lag[indexEqual == FALSE & growth_lag > 0]
+  }
 
   ##
   # estimating the probabilility of growth or steadystate
@@ -112,9 +129,6 @@ growthEstimate <- function(growthObj,
                                      data = dataEqual,
                                      family = binomial)
 
-  dataAbove    <- data[indexEqual == FALSE & growth_lag > 1,]
-
-  dataAbove$y <- y[indexEqual == FALSE & growth_lag > 1] > 0
   growthObj$estimate$ProbAbove <- gam(formula = as.formula(formula$ProbAbove),
                                       data = dataAbove,
                                       family = binomial)
@@ -124,11 +138,26 @@ growthEstimate <- function(growthObj,
   data_above   <- data[indexAbove, ]
   data_below   <- data[indexBelow, ]
   data_above$y <-    y[indexAbove]
-  data_below$y <-  - y[indexBelow]
+  if(difference){
+    data_below$y <-  - y[indexBelow]
+  }else{
+    data_below$y <-    y[indexBelow]
+  }
 
-
-  growthObj$estimate$Above <- geomm(formula$Above,  data = data_above)
-  growthObj$estimate$Below <- geomcm(formula$Below, data = data_below, growthObj$growth_lag[indexBelow] - 1)
+  if(dist$Above == "geomm"){
+    growthObj$estimate$Above <- geomm(formula$Above,  data = data_above)
+  }else if(dist$Above == "gamma"){
+    growthObj$estimate$Above <- gamma_R(formula$Above,  data = data_above)
+  }else{
+    stop("current model for Above are either geomm or gamma")
+  }
+  if(dist$Below=="geommc"){
+    growthObj$estimate$Below <- geomcm(formula$Below, data = data_below, growth_lag[indexBelow] - 1)
+  }else if(dist$Below=="betamc"){
+    growthObj$estimate$Below <- betamc_R(formula$Below, data = data_below, K = growth_lag[indexBelow])
+  }else{
+    stop("current model for Below are either geommc or betamc")
+  }
   return(growthObj)
 }
 ##
@@ -368,4 +397,11 @@ rgrowth <- function(growthObj, X){
                                               p = pB[nums_noExit_no0[index_A==F]],
                                               K = growth_lag[nums_noExit_no0[index_A==F]]-1)
   return(Y)
+}
+#'
+#'
+#' generating random growth for sales
+#'
+rgrowth_temp <- function(growthObj, X){
+
 }

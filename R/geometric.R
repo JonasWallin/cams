@@ -379,10 +379,8 @@ init_geommc <- function(formula, data, K, collectY = TRUE){
 
   if(length(K) == 1)
     K <- rep(K, length(data[, 1]))
-  index = K > 1
-  K <- K[index==TRUE]
-  data_trunc <- data[index == TRUE, ]
-  data_drop <- droplevels(data[index==TRUE, ])
+  data_trunc <- data
+  data_drop <- droplevels(data)
   mf <- model.frame(formula = formula, data = data_drop)
   if(collectY)
     y  <- as.matrix(model.extract(mf, "response"))
