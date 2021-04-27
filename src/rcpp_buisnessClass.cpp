@@ -33,7 +33,7 @@ class Geomm: public Numer::MFuncGrad
 
 
       grad.noalias() = -Rcpp::as<Eigen::VectorXd>(res["gradient"]);
-      if(isnan(f))
+      if(std::isnan(f))
         Rcpp::stop(" f is na");
       return f;
     }
