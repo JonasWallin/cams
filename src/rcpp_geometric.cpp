@@ -57,7 +57,7 @@ List dd_lgeo_cpp_internal( const Eigen::VectorXd&  Y,
 
   }
   List result;
-  if(isnan(lik) )
+  if(std::isnan(lik) )
     lik = -std::numeric_limits<double>::max();
   result["lik"]   = lik;
   result["dlogl"]  = dlog;
