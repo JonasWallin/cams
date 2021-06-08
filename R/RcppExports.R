@@ -8,7 +8,7 @@
 #' @param X      - (n x K) covariates
 #' @param offset - (n x 1) the offset
 optim_geomm <- function(beta0, Y, X, offset) {
-    .Call('_cams_optim_geomm', PACKAGE = 'cams', beta0, Y, X, offset)
+    .Call(`_cams_optim_geomm`, beta0, Y, X, offset)
 }
 
 #' Function for optimize likelihood with constrainted Geometric distribution,
@@ -20,7 +20,7 @@ optim_geomm <- function(beta0, Y, X, offset) {
 #' @param K      - (n x 1) upper constraint on Y
 #' @param offset - (n x 1) the offset
 optim_geommc <- function(beta0, Y, X, K, offset) {
-    .Call('_cams_optim_geommc', PACKAGE = 'cams', beta0, Y, X, K, offset)
+    .Call(`_cams_optim_geommc`, beta0, Y, X, K, offset)
 }
 
 #' dd_lgeom
@@ -28,26 +28,26 @@ optim_geommc <- function(beta0, Y, X, K, offset) {
 NULL
 
 lgeo_cpp <- function(Y, Theta, logl = TRUE) {
-    .Call('_cams_lgeo_cpp', PACKAGE = 'cams', Y, Theta, logl)
+    .Call(`_cams_lgeo_cpp`, Y, Theta, logl)
 }
 
 dd_lgeo_cpp <- function(Y, Theta) {
-    .Call('_cams_dd_lgeo_cpp', PACKAGE = 'cams', Y, Theta)
+    .Call(`_cams_dd_lgeo_cpp`, Y, Theta)
 }
 
 dd_lgeom_cpp <- function(beta, Y, X, offset, calc_hess = TRUE) {
-    .Call('_cams_dd_lgeom_cpp', PACKAGE = 'cams', beta, Y, X, offset, calc_hess)
+    .Call(`_cams_dd_lgeom_cpp`, beta, Y, X, offset, calc_hess)
 }
 
 dd_lgeomc_cpp <- function(beta, Y, X, offset, K, calc_hess = TRUE) {
-    .Call('_cams_dd_lgeomc_cpp', PACKAGE = 'cams', beta, Y, X, offset, K, calc_hess)
+    .Call(`_cams_dd_lgeomc_cpp`, beta, Y, X, offset, K, calc_hess)
 }
 
 lgeo_const_cpp <- function(Y, Theta, K, logl = TRUE) {
-    .Call('_cams_lgeo_const_cpp', PACKAGE = 'cams', Y, Theta, K, logl)
+    .Call(`_cams_lgeo_const_cpp`, Y, Theta, K, logl)
 }
 
 ddlgeo_const_cpp <- function(Y, Theta, K, calc_ddlog = TRUE) {
-    .Call('_cams_ddlgeo_const_cpp', PACKAGE = 'cams', Y, Theta, K, calc_ddlog)
+    .Call(`_cams_ddlgeo_const_cpp`, Y, Theta, K, calc_ddlog)
 }
 

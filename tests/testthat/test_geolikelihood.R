@@ -77,7 +77,7 @@ test_that(" geometric likelihood, with covariates, constrained, gradient test, s
   #comparing C++ to R
   geo_obj_cpp <- dd_lgeomc_cpp(beta, Y, X, rep(0, length(Y)), rep(K, length(Y)))
   expect_equal(geo_obj_cpp$gradient, c(attr(geo_obj,"gradient")), tolerance=1e-10)
-  expect_equal(geo_obj_cpp$hessian, dd_beta,attr(geo_obj,"hessian"), tolerance=1e-10)
+  expect_equal(geo_obj_cpp$hessian, attr(geo_obj,"hessian"), tolerance=1e-10)
 
 
 })
@@ -117,7 +117,7 @@ test_that(" geometric likelihood, with covariates, gradient test, second grad te
   #comparing C++ to R
   geo_obj_cpp <- dd_lgeom_cpp(beta, Y, X, rep(0, length(Y)))
   expect_equal(geo_obj_cpp$gradient, c(attr(geo_obj,"gradient")), tolerance=1e-10)
-  expect_equal(geo_obj_cpp$hessian, dd_beta,attr(geo_obj,"hessian"), tolerance=1e-10)
+  expect_equal(geo_obj_cpp$hessian, attr(geo_obj,"hessian"), tolerance=1e-10)
 
 
 })

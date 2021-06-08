@@ -75,6 +75,7 @@ dd_lgeom <- function(beta, Y, X, offset = NULL)
 lgeo_const <- function(Y, theta, K, log.l = TRUE)
 {
   p <- 1 / theta
+
   p_m <- 1 - p
   lik <- (Y - 1) * log(p_m) + log(p)
   lik <- lik - log(1 - p_m^K)
@@ -151,13 +152,17 @@ dd_lgeom_c <- function(beta, Y, X, K,  offset = NULL)
 # beta - (p x 1) coeffients
 # K    - (1 x 1 or n x 1) constraint for Y_i
 ##
-rgeomc <- function(X=NULL , beta=NULL, K, offset = NULL, p = NULL, n=NULL){
+rgeomc <- function(X=NULL , beta=NULL, K, offset = NULL, p = NULL){
 
 
+  if(is.null(p)){
+    n <- dim(X)[1]
+  }else{
+    n <- length(p)
+  }
   if(length(K) == 1)
     K = rep(K, n)
   if(is.null(p)){
-    n <- dim(X)[1]
     if(is.null(offset)){
       theta <- 1 + exp(X%*%beta)
     }else{
@@ -355,10 +360,10 @@ geomcm_R <- function(formula, data, K){
     cat('WARNING optimzation in geomcm might have failed\n')
 
   beta <- as.matrix(optim_out$estimate)
-  rownames(beta)[[1]] <-  dimnames(beta0)[[1]]
+  dimnames(beta)[[1]] <-  dimnames(beta0)[[1]]
   hessian <- optim_out$hessian
-  rownames(hessian)[[1]] <-  dimnames(beta0)[[1]]
-  colnames(hessian)[[2]] <-  dimnames(beta0)[[1]]
+  dimnames(hessian)[[1]] <-  dimnames(beta0)[[1]]
+  dimnames(hessian)[[2]] <-  dimnames(beta0)[[1]]
   res <- list(y = y,
               X = X,
               beta = beta,

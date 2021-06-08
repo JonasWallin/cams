@@ -191,6 +191,7 @@ double lgeo_const_cpp( Eigen::VectorXd&  Y,
   double p, p_m;
   for(int i = 0; i < Y.size(); i++){
     p = 1. / Theta[i];
+
     p_m = 1. - p;
     lik += (Y[i] - 1) * log(p_m) + log(p);
     lik -= log(1 - pow(p_m, K[i]));
@@ -243,6 +244,7 @@ List ddlgeo_const_internal( const Eigen::VectorXd&  Y,
     }
 
     lik += (Y[i] - 1) * log(one_mp) + log(p);
+
     lik -= log(base_const); // constraint correction
 
     double Y_p_p_m1 = (Y[i] - 1) * p * theta_inv_m1;
