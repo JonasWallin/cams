@@ -9,6 +9,6 @@ Description: More about what it does (maybe more than one line)
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
-Imports:  Rcpp (>= 0.12.10), stringr, RcppNumerical, RcppEigen, mgcv, ggplot2
+Imports:  Rcpp (>= 0.12.10), stringr, RcppNumerical, RcppEigen, mgcv, ggplot2, EnvStats
 LinkingTo: Rcpp, RcppEigen, RcppNumerical, ggplot2, stringr, formula.tools
 Suggests: testthat
