@@ -65,12 +65,12 @@ generate.data <- function(n, size="small"){
     Above.val = rgeom(n, prob = 1/(1+exp(X%*%beta.Above+ log(emp_prev))))  + emp_prev
     # Below
     beta.Below <- c(-2.71, -4.40, -0.01, 0.33, -0.18)
-    Belov.val = rgeomc(X, beta.Below, emp_prev, offset =log(emp_prev))
+    Belov.val = emp_prev -rgeomc(X, beta.Below, emp_prev, offset =log(emp_prev))
 
     reg_dat.simulate$exit <- Exit
     reg_dat.simulate$emp <- emp_prev*Equal +
                             (1-Equal) * Above * Above.val+
-                            (1-Equal) * (1-Above) * Belov.val
+                            (1-Equal) * (1-Above) * pmax(Belov.val,1)
 
   }else{
 
@@ -106,7 +106,7 @@ generate.data <- function(n, size="small"){
               reg_dat.simulate$assp_hist_below)
 
     beta.exit <- c(-2.27, -3.74,0, 0.05, 0.015)
-    Exit <- runif(n) > logit(X%*%beta.exit)
+    Exit <- runif(n) > logit(-X%*%beta.exit)
     #equal
     beta.equal <- c(-1.54, 0.44, 0, -0.01, 0.02)
     Equal <- runif(n) > logit(X%*%beta.equal)
@@ -118,12 +118,12 @@ generate.data <- function(n, size="small"){
     Above.val = rgeom(n, prob = 1/(1+exp(X%*%beta.Above + log(emp_prev))))  + emp_prev
     # Below
     beta.Below <- c(-2.31, -0.69, -0.02, 0.11, -0.06)
-    Belov.val =  rgeomc(X, beta.Below, emp_prev, offset = log(emp_prev))
+    Belov.val =  emp_prev - rgeomc(X, beta.Below, emp_prev, offset = log(emp_prev))
 
     reg_dat.simulate$exit <- Exit
     reg_dat.simulate$emp <- emp_prev*Equal +
       (1-Equal) * Above * Above.val+
-      (1-Equal) * (1-Above) * Belov.val
+      (1-Equal) * (1-Above) * pmax(Belov.val,1)
 
   }
   return(reg_dat.simulate)

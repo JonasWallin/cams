@@ -361,8 +361,8 @@ rgrowth <- function(growthObj, X){
 
   Prob0 <- predict(growthObj$estimate$ProbEqual, newdata = X, type = 'response')
   ProbA <- predict(growthObj$estimate$ProbAbove, newdata = X, type = 'response')
-  pA    <- 1/predict(growthObj$estimate$Above, newdata = X)
-  pB    <- 1/predict(growthObj$estimate$Below, newdata = X)
+  pA    <- 1/predict.geomm(growthObj$estimate$Above, newdata = X)
+  pB    <- 1/predict.geomcm(growthObj$estimate$Below, newdata = X)
   if(is.null(growthObj$exitIndex) ==FALSE)
     ProbE <- predict(growthObj$estimate$ProbExit, newdata = X, type = 'response')
 
@@ -390,10 +390,10 @@ rgrowth <- function(growthObj, X){
   index_A[growth_lag[nums_noExit_no0]==1] = T
   n_A <- sum(index_A)
   if(n_A>0)
-    Y[nums_noExit_no0[index_A==T],2] = growth_lag[nums_noExit_no0[index_A==T]] + rgeom(n=n_A,
+    Y[nums_noExit_no0[index_A==T],2] = growth_lag[nums_noExit_no0[index_A==T]] + rgeom(n_A,
                                              prob = pA[nums_noExit_no0[index_A==T]])+1
   if(n_noExit_no0-n_A>0)
-    Y[nums_noExit_no0[index_A==F],2] = growth_lag[nums_noExit_no0[index_A==F]] - rgeomc(n=n_noExit_no0-n_A,
+    Y[nums_noExit_no0[index_A==F],2] = growth_lag[nums_noExit_no0[index_A==F]] - rgeomc(
                                               p = pB[nums_noExit_no0[index_A==F]],
                                               K = growth_lag[nums_noExit_no0[index_A==F]]-1)
   return(Y)

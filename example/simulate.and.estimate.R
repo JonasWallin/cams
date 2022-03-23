@@ -1,4 +1,6 @@
+rm(list=ls())
 library(cams)
+set.seed(1)
 n <- 10000
 size = "medium"
 if(size== "small"){
@@ -25,3 +27,6 @@ logNorm_obj <- lm("log(emp) ~ -1 + assp_hist_over + assp_hist_below + emp_prev_t
 
 
 diagonstic.geomm(cam_obj$estimate$Above, n.groups=20)
+graphics.off()
+simulated.data <- rgrowth(cam_obj, data )
+

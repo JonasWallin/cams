@@ -24,7 +24,7 @@ betamc_R <- function(formula, data, K){
   names <- dimnames(beta0)[[1]]
   data$old.respose <- data[,formula.tools::lhs.vars(as.formula(formula))]
   data[,formula.tools::lhs.vars(as.formula(formula))] <- y
-  model.fit <- gam(as.formula(formula), data= data, family = betar)
+  model.fit <- mgcv::gam(as.formula(formula), data= data, family = betar)
 
   res <- list(data = data,
               formula = formula,
