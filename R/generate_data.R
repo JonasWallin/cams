@@ -17,6 +17,7 @@ generate.data <- function(n, size="small"){
       emp_prev[index] = rgeom(sum(index),1/2.06)
     }
     emp_prev <- emp_prev+1
+
     #regression on the other variables
     #model.age = glm.nb(age-2 ~ 1 + emp_prev, data=reg_dat)
     age = rnbinom(n, mu = exp(0.9397 ), size =  1.4462)  +2
@@ -24,13 +25,17 @@ generate.data <- function(n, size="small"){
     ln_roa <-  0.1088506  + -0.0021723  * emp_prev + -0.0032622 * age + rnorm(n, sd = 0.1037)
     #assp.model <-  lm(assp_hist ~ emp_prev + age + ln_roa , dat=  reg_dat)
     assp_hist <- -0.24157 + 0.52207 * emp_prev + -0.20382 * age + 7.9261 * ln_roa + rnorm(n, sd = 6.837)
+    sales_prev <-exp( -0.498648 -0.022451  * assp_hist  +  0.063615 * emp_prev + 0.087288 * age +  0.919724 * ln_roa + rnorm(n, sd = 0.9459))
+    sales     <-exp( 0.0332283+  0.7949240 * log(sales_prev) + 0.0581012  * assp_hist  +  0.0215592 * emp_prev -0.0100692 * age +  0.5632460 * ln_roa + sqrt(rgamma(n, shape=1))*rnorm(n, sd =  0.5552))
 
     reg_dat.simulate <- data.frame( emp_prev        = emp_prev,
                                     age             = age,
                                     ln_roa          = ln_roa,
                                     assp_hist       = assp_hist,
                                     assp_hist_over  = assp_hist,
-                                    assp_hist_below = assp_hist)
+                                    assp_hist_below = assp_hist,
+                                    sales           = sales,
+                                    sales_prev      = sales_prev)
     reg_dat.simulate$assp_hist_over[reg_dat.simulate$assp_hist_over<0] = 0
     reg_dat.simulate$assp_hist_below[reg_dat.simulate$assp_hist_below>0] = 0
 
@@ -81,13 +86,16 @@ generate.data <- function(n, size="small"){
     ln_roa <-  8.859e-02  + -8.679e-04  * emp_prev + 8.498e-05 * age + rnorm(n, sd = 0.09403)
     #assp.model <-  lm(assp_hist ~ emp_prev + age + ln_roa , dat=  reg_dat)
     assp_hist <- 2.19752 +-0.01359   * emp_prev + -0.09728  * age + 3.36240 * ln_roa + rnorm(n, sd = 6.498 )
-
+    sales_prev <-exp( 2.7169899 + 0.0059802 * emp_prev + 0.0076848 * age +  -0.2055079 * ln_roa + rnorm(n, sd =  0.3671))
+    sales     <-exp(  0.9379676 * log(sales_prev) +0.0277109  * assp_hist  +  0.0044575 * emp_prev +  0.5811246 * ln_roa + sqrt(rgamma(n, shape=1))*rnorm(n, sd =  0.5552))
     reg_dat.simulate <- data.frame( emp_prev        = emp_prev,
                                     age             = age,
                                     ln_roa          = ln_roa,
                                     assp_hist       = assp_hist,
                                     assp_hist_over  = assp_hist,
-                                    assp_hist_below = assp_hist)
+                                    assp_hist_below = assp_hist,
+                                    sales           = sales,
+                                    sales_prev      = sales_prev)
     reg_dat.simulate$assp_hist_over[reg_dat.simulate$assp_hist_over<0] = 0
     reg_dat.simulate$assp_hist_below[reg_dat.simulate$assp_hist_below>0] = 0
 
