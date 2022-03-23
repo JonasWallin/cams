@@ -1,6 +1,12 @@
 
 logit <- function(x){1/(1+exp(-x))}
 
+#'
+#' simulate company data that mimics the article
+#'
+#'
+#'
+#'
 generate.data <- function(n, size="small"){
   if(size=="small"){
     emp_prev <- rgeom(n, 1/2.06)+1

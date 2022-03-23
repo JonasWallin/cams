@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // optim_geomm
 Rcpp::List optim_geomm(Eigen::VectorXd& beta0, const Eigen::VectorXd& Y, const Eigen::MatrixXd& X, const Eigen::VectorXd& offset);
 RcppExport SEXP _cams_optim_geomm(SEXP beta0SEXP, SEXP YSEXP, SEXP XSEXP, SEXP offsetSEXP) {
